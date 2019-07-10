@@ -36,6 +36,7 @@
 #include "obstacle_detector/obstacle_extractor.h"
 #include "obstacle_detector/utilities/figure_fitting.h"
 #include "obstacle_detector/utilities/math_utilities.h"
+#include <sensor_msgs/point_cloud2_iterator.h>
 
 using namespace std;
 using namespace obstacle_detector;
@@ -145,13 +146,19 @@ void ObstacleExtractor::scanCallback(const sensor_msgs::LaserScan::ConstPtr scan
   processPoints();
 }
 
-void ObstacleExtractor::pclCallback(const sensor_msgs::PointCloud::ConstPtr pcl_msg) {
+void ObstacleExtractor::pclCallback(const sensor_msgs::PointCloud2::ConstPtr pcl_msg) {
   base_frame_id_ = pcl_msg->header.frame_id;
   stamp_ = pcl_msg->header.stamp;
 
-  for (const geometry_msgs::Point32& point : pcl_msg->points)
-    input_points_.push_back(Point(point.x, point.y));
+  sensor_msgs::PointCloud2ConstIterator<float> itx(*pcl_msg, "x");
+  sensor_msgs::PointCloud2ConstIterator<float> ity(*pcl_msg, "y");
 
+  while (itx != itx.end())
+  {
+	  input_points_.push_back(Point(*itx, *ity));
+	  ++itx, ++ity;
+  }
+  
   processPoints();
 }
 

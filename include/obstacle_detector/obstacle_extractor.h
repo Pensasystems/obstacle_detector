@@ -39,7 +39,7 @@
 #include <tf/transform_listener.h>
 #include <std_srvs/Empty.h>
 #include <sensor_msgs/LaserScan.h>
-#include <sensor_msgs/PointCloud.h>
+#include <sensor_msgs/PointCloud2.h>
 #include <obstacle_detector/Obstacles.h>
 
 #include "obstacle_detector/utilities/point.h"
@@ -59,7 +59,7 @@ public:
 private:
   bool updateParams(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
   void scanCallback(const sensor_msgs::LaserScan::ConstPtr scan_msg);
-  void pclCallback(const sensor_msgs::PointCloud::ConstPtr pcl_msg);
+  void pclCallback(const sensor_msgs::PointCloud2::ConstPtr pcl_msg);
 
   void initialize() { std_srvs::Empty empt; updateParams(empt.request, empt.response); }
 
